@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Lykke.Job.SlackNotifications.Core;
 using Lykke.Job.SlackNotifications.Core.Services;
 
@@ -7,14 +8,12 @@ namespace Lykke.Job.SlackNotifications.Services
     public class NotificationFilter : INotificationFilter
     {
         private readonly HashSet<string> _mutedSenders = new HashSet<string>();
+        private readonly HashSet<string> _mutedPrefixes = new HashSet<string>();
 
         public NotificationFilter(SlackNotificationsJobSettings settings)
         {
-            if (settings.MutedSenders != null)
-                foreach (var mutedSender in settings.MutedSenders)
-                {
-                    _mutedSenders.Add(mutedSender);
-                }
+            _mutedSenders = new HashSet<string>(settings.MutedSenders);
+            _mutedPrefixes = new HashSet<string>(settings.MutedMessagePrefixes);
         }
 
         public void MuteSender(string sender)
@@ -27,9 +26,25 @@ namespace Lykke.Job.SlackNotifications.Services
             _mutedSenders.Remove(sender);
         }
 
+        public void MuteMessagePrefix(string prefix)
+        {
+            _mutedPrefixes.Add(prefix);
+        }
+
+        public void UnmuteMessagePrefix(string prefix)
+        {
+            _mutedPrefixes.Remove(prefix);
+        }
+
         public bool ShouldMessageBeFilteredOut(SlackNotificationRequestMsg message)
         {
-            return _mutedSenders.Contains(message.Sender);
+            if (_mutedSenders.Contains(message.Sender))
+                return true;
+
+            if (_mutedPrefixes.Any(p => message.Message.StartsWith(p)))
+                return true;
+
+            return false;
         }
     }
 }

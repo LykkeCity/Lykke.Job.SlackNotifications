@@ -13,17 +13,31 @@ namespace Lykke.Job.SlackNotifications.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/Mute/{sender}")]
-        public void Mute(string sender)
+        [Route("api/[controller]/MuteSender/{sender}")]
+        public void MuteSender(string sender)
         {
             _notificationFilter.MuteSender(sender);
         }
 
         [HttpPost]
-        [Route("api/[controller]/Unmute/{sender}")]
-        public void Unmute(string sender)
+        [Route("api/[controller]/UnmuteSender/{sender}")]
+        public void UnmuteSender(string sender)
         {
             _notificationFilter.UnmuteSender(sender);
+        }
+
+        [HttpPost]
+        [Route("api/[controller]/MuteMessagePrefix/{prefix}")]
+        public void MuteMessagePrefix(string prefix)
+        {
+            _notificationFilter.MuteMessagePrefix(prefix);
+        }
+
+        [HttpPost]
+        [Route("api/[controller]/UnmuteMessagePrefix/{prefix}")]
+        public void UnmuteMessagePrefix(string prefix)
+        {
+            _notificationFilter.UnmuteMessagePrefix(prefix);
         }
     }
 }
