@@ -4,17 +4,23 @@ using Common;
 using Common.Log;
 using Lykke.JobTriggers.Triggers.Attributes;
 using Lykke.Job.SlackNotifications.Core;
+using Lykke.Job.SlackNotifications.Core.Services;
 
 namespace Lykke.Job.SlackNotifications.Services
 {
     public class SlackNotifcationsConsumer
     {
-        private readonly SrvSlackNotifications _srvSlackNotifications;
+        private readonly ISlackNotificationSender _srvSlackNotifications;
+        private readonly INotificationFilter _notificationFilter;
         private readonly ILog _log;
 
-        public SlackNotifcationsConsumer(SrvSlackNotifications srvSlackNotifications, ILog log)
+        public SlackNotifcationsConsumer(
+            ISlackNotificationSender srvSlackNotifications,
+            INotificationFilter notificationFilter,
+            ILog log)
         {
             _srvSlackNotifications = srvSlackNotifications;
+            _notificationFilter = notificationFilter;
             _log = log;
         }
 
@@ -23,7 +29,9 @@ namespace Lykke.Job.SlackNotifications.Services
         {
             try
             {
-                await _srvSlackNotifications.SendNotification(msg.Type, msg.Message, msg.Sender);
+                bool skip = _notificationFilter.ShouldMessageBeFilteredOut(msg);
+                if (!skip)
+                    await _srvSlackNotifications.SendNotificationAsync(msg.Type, msg.Message, msg.Sender);
             }
             catch (Exception ex)
             {

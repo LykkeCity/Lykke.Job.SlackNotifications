@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using System.Text;
 using Common;
 using Lykke.Job.SlackNotifications.Core;
+using Lykke.Job.SlackNotifications.Core.Services;
 
 namespace Lykke.Job.SlackNotifications.Services
 {
-    public class SrvSlackNotifications
+    public class SrvSlackNotifications : ISlackNotificationSender
     {
         private readonly SlackSettings _settings;
 
@@ -15,20 +16,18 @@ namespace Lykke.Job.SlackNotifications.Services
             _settings = settings;
         }
 
-        public async Task SendNotification(string type, string message, string sender = null)
+        public async Task SendNotificationAsync(string type, string message, string sender = null)
         {
             var webHookUrl = _settings.Channels.FirstOrDefault(x => x.Type == type)?.WebHookUrl;
-            if (webHookUrl != null)
-            {
-                var text = new StringBuilder();
+            if (webHookUrl == null)
+                return;
 
-                if (!string.IsNullOrEmpty(_settings.Env))
-                    text.AppendLine($"Environment: {_settings.Env}");
+            var strBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(_settings.Env))
+                strBuilder.AppendLine($"Environment: {_settings.Env}");
+            strBuilder.AppendLine(sender != null ? $"{sender} : {message}" : message);
 
-                text.AppendLine(sender != null ? $"{sender} : {message}" : message);
-
-                await HttpRequestClient.PostRequest(new { text = text.ToString() }.ToJson(), webHookUrl);
-            }
+            await HttpRequestClient.PostRequest(new { text = strBuilder.ToString() }.ToJson(), webHookUrl);
         }
     }
 }

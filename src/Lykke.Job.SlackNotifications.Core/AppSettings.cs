@@ -1,4 +1,6 @@
-﻿namespace Lykke.Job.SlackNotifications.Core
+﻿using System.Collections.Generic;
+
+namespace Lykke.Job.SlackNotifications.Core
 {
     public class AppSettings
     {
@@ -14,6 +16,8 @@
         public string SharedStorageConnString { get; set; }
 
         public SlackSettings Slack { get; set; }
+
+        public List<string> MutedSenders { get; set; }
     }
 
     public class SlackNotificationsSettings

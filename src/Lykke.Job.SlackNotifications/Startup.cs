@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +17,7 @@ using Lykke.SettingsReader;
 using Lykke.JobTriggers.Extenstions;
 using Lykke.JobTriggers.Triggers;
 using Lykke.Job.SlackNotifications.Core;
+using Lykke.Job.SlackNotifications.Core.Services;
 using Lykke.Job.SlackNotifications.Services;
 
 namespace Lykke.Job.SlackNotifications
@@ -62,10 +61,13 @@ namespace Lykke.Job.SlackNotifications
             builder.RegisterInstance(Log).As<ILog>().SingleInstance();
 
             var settings = settingsManager.CurrentValue;
-
+            builder.RegisterInstance(settings.SlackNotificationsJobSettings).SingleInstance();
             builder.RegisterType<SlackNotifcationsConsumer>();
-
-            builder.RegisterType<SrvSlackNotifications>().WithParameter(TypedParameter.From(settings.SlackNotificationsJobSettings.Slack));
+            builder.RegisterType<NotificationFilter>().As<INotificationFilter>().SingleInstance();
+            builder
+                .RegisterType<SrvSlackNotifications>()
+                .WithParameter(TypedParameter.From(settings.SlackNotificationsJobSettings.Slack))
+                .As<ISlackNotificationSender>();
 
             builder.AddTriggers(pool =>
             {
