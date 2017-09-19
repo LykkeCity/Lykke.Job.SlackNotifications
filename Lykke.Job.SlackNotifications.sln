@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.SlackNotifications", "src\Lykke.Job.SlackNotifications\Lykke.Job.SlackNotifications.csproj", "{C6E2507F-2C94-4A0F-AEC9-04EA94E1657D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D346F1BD-D79A-45CF-8C97-575CE786FCE0}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Job.SlackNotifications.Core", "src\Lykke.Job.SlackNotifications.Core\Lykke.Job.SlackNotifications.Core.csproj", "{B1078C18-6196-4939-966B-828D0306980E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1E060381-7547-42B8-8323-5B21123FFF6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Job.SlackNotifications.Tests", "tests\Lykke.Job.SlackNotifications.Tests\Lykke.Job.SlackNotifications.Tests.csproj", "{7A3FA243-2349-4C62-BE73-032A951259C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Job.SlackNotifications.Services", "src\Lykke.Job.SlackNotifications.Services\Lykke.Job.SlackNotifications.Services.csproj", "{1D3E3834-2C92-46D5-9E02-96027D4480ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6E2507F-2C94-4A0F-AEC9-04EA94E1657D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6E2507F-2C94-4A0F-AEC9-04EA94E1657D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6E2507F-2C94-4A0F-AEC9-04EA94E1657D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6E2507F-2C94-4A0F-AEC9-04EA94E1657D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1078C18-6196-4939-966B-828D0306980E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1078C18-6196-4939-966B-828D0306980E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1078C18-6196-4939-966B-828D0306980E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1078C18-6196-4939-966B-828D0306980E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3FA243-2349-4C62-BE73-032A951259C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3FA243-2349-4C62-BE73-032A951259C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3FA243-2349-4C62-BE73-032A951259C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3FA243-2349-4C62-BE73-032A951259C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D3E3834-2C92-46D5-9E02-96027D4480ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D3E3834-2C92-46D5-9E02-96027D4480ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D3E3834-2C92-46D5-9E02-96027D4480ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D3E3834-2C92-46D5-9E02-96027D4480ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A3FA243-2349-4C62-BE73-032A951259C8} = {1E060381-7547-42B8-8323-5B21123FFF6A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF159CDA-EC50-4B68-BD84-EE3CF9F19E31}
+	EndGlobalSection
+EndGlobal

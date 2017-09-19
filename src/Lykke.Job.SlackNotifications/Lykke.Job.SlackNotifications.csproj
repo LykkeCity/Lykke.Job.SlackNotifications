@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.1" />
+    <PackageReference Include="Lykke.Common" Version="1.1.97" />
+    <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.0.13" />
+    <PackageReference Include="Lykke.Logs" Version="2.0.1" />
+    <PackageReference Include="Lykke.SettingsReader" Version="1.0.41" />
+    <PackageReference Include="Lykke.SlackNotification.AzureQueue" Version="1.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lykke.Job.SlackNotifications.Core\Lykke.Job.SlackNotifications.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Job.SlackNotifications.Services\Lykke.Job.SlackNotifications.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
