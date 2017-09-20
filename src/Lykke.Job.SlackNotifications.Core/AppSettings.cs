@@ -6,6 +6,8 @@ namespace Lykke.Job.SlackNotifications.Core
     {
         public SlackNotificationsSettings SlackNotifications { get; set; }
 
+        public SlackSettings SlackIntegration { get; set; }
+
         public SlackNotificationsJobSettings SlackNotificationsJobSettings { get; set; }
     }
 
@@ -14,8 +16,6 @@ namespace Lykke.Job.SlackNotifications.Core
         public string LogsConnectionString { get; set; }
 
         public string SharedStorageConnString { get; set; }
-
-        public SlackSettings Slack { get; set; }
 
         public List<string> MutedSenders { get; set; }
 

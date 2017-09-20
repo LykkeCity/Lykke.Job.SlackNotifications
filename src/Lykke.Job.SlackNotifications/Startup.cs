@@ -66,7 +66,7 @@ namespace Lykke.Job.SlackNotifications
             builder.RegisterType<NotificationFilter>().As<INotificationFilter>().SingleInstance();
             builder
                 .RegisterType<SrvSlackNotifications>()
-                .WithParameter(TypedParameter.From(settings.SlackNotificationsJobSettings.Slack))
+                .WithParameter(TypedParameter.From(settings.SlackIntegration))
                 .As<ISlackNotificationSender>();
 
             builder.AddTriggers(pool =>
