@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Job.SlackNotifications.Core
 {
@@ -17,6 +18,7 @@ namespace Lykke.Job.SlackNotifications.Core
 
         public string SharedStorageConnString { get; set; }
 
+        [Optional]
         public List<string> MutedSenders { get; set; }
 
         public List<string> MutedMessagePrefixes { get; set; }
