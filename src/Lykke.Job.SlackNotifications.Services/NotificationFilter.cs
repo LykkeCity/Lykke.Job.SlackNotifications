@@ -12,7 +12,7 @@ namespace Lykke.Job.SlackNotifications.Services
 
         public NotificationFilter(SlackNotificationsJobSettings settings)
         {
-            _mutedSenders = new HashSet<string>(settings.MutedSenders);
+            _mutedSenders = settings.MutedSenders == null ? new HashSet<string>() : new HashSet<string>(settings.MutedSenders);
             _mutedPrefixes = new HashSet<string>(settings.MutedMessagePrefixes);
         }
 
