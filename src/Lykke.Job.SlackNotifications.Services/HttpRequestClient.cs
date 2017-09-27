@@ -1,26 +1,20 @@
-﻿using System.Threading.Tasks;
-using RestSharp;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Lykke.Job.SlackNotifications.Services
 {
     internal static class HttpRequestClient
     {
-        public static async Task<string> PostRequest(string data, string url)
+        public static async Task<string> PostRequest(string json, string url)
         {
-            var restClient = new RestClient(url);
-
-            var request = new RestRequest("", Method.POST);
-            request.AddHeader("Accept", "application/json");
-
-            request.AddParameter("application/json", data, ParameterType.RequestBody);
-
-            var taskCompletion = new TaskCompletionSource<IRestResponse>();
-
-            restClient.ExecuteAsync(request, r => taskCompletion.SetResult(r));
-
-            var response = (RestResponse)(await taskCompletion.Task);
-
-            return response.Content;
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(url, content);
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }
