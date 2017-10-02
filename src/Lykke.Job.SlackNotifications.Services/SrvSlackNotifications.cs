@@ -20,7 +20,19 @@ namespace Lykke.Job.SlackNotifications.Services
         {
             var webHookUrl = _settings.Channels.FirstOrDefault(x => x.Type == type)?.WebHookUrl;
             if (webHookUrl == null)
+            {
+                webHookUrl = _settings.Channels.FirstOrDefault(x => x.Type == "Warning")?.WebHookUrl;
+                if (webHookUrl == null)
+                    webHookUrl = _settings.Channels.FirstOrDefault(x => x.Type.StartsWith("Warning"))?.WebHookUrl;
+                if (webHookUrl != null)
+                {
+                    if (string.IsNullOrWhiteSpace(sender))
+                        sender = "unknown sender";
+                    await HttpRequestClient.PostRequest(
+                        new { text = $"Couldn't find webhook for {type} from {sender}" }.ToJson(), webHookUrl);
+                }
                 return;
+            }
 
             var strBuilder = new StringBuilder();
             if (!string.IsNullOrEmpty(_settings.Env))
