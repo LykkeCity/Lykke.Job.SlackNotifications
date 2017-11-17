@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lykke.Job.SlackNotifications.Core\Lykke.Job.SlackNotifications.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Job.SlackNotifications.Repositories\Lykke.Job.SlackNotifications.Repositories.csproj" />
     <ProjectReference Include="..\Lykke.Job.SlackNotifications.Services\Lykke.Job.SlackNotifications.Services.csproj" />
   </ItemGroup>
 

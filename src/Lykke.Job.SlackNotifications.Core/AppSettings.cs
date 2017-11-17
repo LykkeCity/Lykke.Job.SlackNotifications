@@ -44,6 +44,8 @@ namespace Lykke.Job.SlackNotifications.Core
         {
             public string Type { get; set; }
             public string WebHookUrl { get; set; }
+            [Optional]
+            public int MaxShortMessageLength { get; set; }
         }
 
         public string Env { get; set; }
