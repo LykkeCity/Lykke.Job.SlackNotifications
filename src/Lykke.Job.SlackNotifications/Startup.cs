@@ -17,7 +17,9 @@ using Lykke.SettingsReader;
 using Lykke.JobTriggers.Extenstions;
 using Lykke.JobTriggers.Triggers;
 using Lykke.Job.SlackNotifications.Core;
+using Lykke.Job.SlackNotifications.Core.Domain;
 using Lykke.Job.SlackNotifications.Core.Services;
+using Lykke.Job.SlackNotifications.Repositories;
 using Lykke.Job.SlackNotifications.Services;
 
 namespace Lykke.Job.SlackNotifications
@@ -25,6 +27,7 @@ namespace Lykke.Job.SlackNotifications
     public class Startup
     {
         private TriggerHost _triggerHost;
+        private Task _triggerHostTask;
 
         public IContainer ApplicationContainer { get; private set; }
         public IConfigurationRoot Configuration { get; }
@@ -68,6 +71,9 @@ namespace Lykke.Job.SlackNotifications
                 .RegisterType<SrvSlackNotifications>()
                 .WithParameter(TypedParameter.From(settings.SlackIntegration))
                 .As<ISlackNotificationSender>();
+            builder
+                .Register(c => MessagesRepository.Create(settingsManager.Nested(s => s.SlackNotificationsJobSettings.SharedStorageConnString)))
+                .As<IMessagesRepository>();
 
             builder.AddTriggers(pool =>
             {
@@ -95,47 +101,69 @@ namespace Lykke.Job.SlackNotifications
 
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUi();
+            app.UseSwaggerUI(x =>
+            {
+                x.RoutePrefix = "swagger/ui";
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
             app.UseStaticFiles();
 
-            appLifetime.ApplicationStarted.Register(StartApplication);
-            appLifetime.ApplicationStopping.Register(StopApplication);
-            appLifetime.ApplicationStopped.Register(CleanUp);
+            appLifetime.ApplicationStarted.Register(() => StartApplication().Wait());
+            appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
+            appLifetime.ApplicationStopped.Register(() => CleanUp().Wait());
         }
 
-        private void StartApplication()
+        private async Task StartApplication()
         {
             try
             {
-                Task.Run(() => _triggerHost?.Start().Wait());
+                _triggerHostTask = _triggerHost.Start();
+
+                await Log.WriteMonitorAsync("", "", "Started");
             }
             catch (Exception ex)
             {
-                Log.WriteFatalErrorAsync(nameof(Startup), nameof(StartApplication), ex);
+                await Log.WriteFatalErrorAsync(nameof(Startup), nameof(StartApplication), ex);
             }
         }
 
-        private void StopApplication()
+        private async Task StopApplication()
         {
             try
             {
                 _triggerHost?.Cancel();
+
+                if (_triggerHostTask != null)
+                {
+                    await _triggerHostTask;
+                }
             }
             catch (Exception ex)
             {
-                Log.WriteFatalErrorAsync(nameof(Startup), nameof(StopApplication), ex);
+                if (Log != null)
+                {
+                    await Log?.WriteFatalErrorAsync(nameof(Startup), nameof(StopApplication), ex);
+                }
             }
         }
 
-        private void CleanUp()
+        private async Task CleanUp()
         {
             try
             {
+                if (Log != null)
+                {
+                    await Log.WriteMonitorAsync("", "", "Terminating");
+                }
+
                 ApplicationContainer.Dispose();
             }
             catch (Exception ex)
             {
-                Log.WriteFatalErrorAsync(nameof(Startup), nameof(CleanUp), ex);
+                if (Log != null)
+                {
+                    await Log.WriteFatalErrorAsync(nameof(Startup), nameof(CleanUp), ex);
+                }
             }
         }
 
