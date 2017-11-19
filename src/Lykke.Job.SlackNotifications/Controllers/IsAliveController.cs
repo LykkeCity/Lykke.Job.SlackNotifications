@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
 using Lykke.Job.SlackNotifications.Models;
@@ -18,8 +17,14 @@ namespace Lykke.Job.SlackNotifications.Controllers
         {
             return Ok(new IsAliveResponse
             {
+                Name = PlatformServices.Default.Application.ApplicationName,
                 Version = PlatformServices.Default.Application.ApplicationVersion,
-                Env = Environment.GetEnvironmentVariable("ENV_INFO"),
+                Env = Program.EnvInfo,
+#if DEBUG
+                IsDebug = true,
+#else
+                IsDebug = false,
+#endif
             });
         }
     }
