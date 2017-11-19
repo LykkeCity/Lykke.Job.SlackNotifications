@@ -4,6 +4,6 @@ namespace Lykke.Job.SlackNotifications.Core.Domain
 {
     public interface IMessagesRepository
     {
-        Task<string> SaveMessageAsync(string message);
+        Task<string> SaveMessageAsync(string environment, string sender, string message);
     }
 }

@@ -18,6 +18,8 @@ namespace Lykke.Job.SlackNotifications.Core
 
         public string SharedStorageConnString { get; set; }
 
+        public string FullMessagesConnString { get; set; }
+
         [Optional]
         public List<string> MutedSenders { get; set; }
 
