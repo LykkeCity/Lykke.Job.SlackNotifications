@@ -38,14 +38,14 @@ namespace Lykke.Job.SlackNotifications.Services
             if (_environment != null)
                 strBuilder.AppendLine(_environment);
 
-            var processedMessage = await ProcessMessageAsync(message, channel);
+            var processedMessage = await ProcessMessageAsync(sender, message, channel);
 
             strBuilder.AppendLine(sender != null ? $"{sender} : {processedMessage}" : processedMessage);
 
             await HttpRequestClient.PostRequest(new { text = strBuilder.ToString() }.ToJson(), channel.WebHookUrl);
         }
 
-        private async Task<string> ProcessMessageAsync(string message, SlackSettings.Channel channel)
+        private async Task<string> ProcessMessageAsync(string sender, string message, SlackSettings.Channel channel)
         {
             var maxShortMessageLength = channel.MaxShortMessageLength == 0 ? 250 : channel.MaxShortMessageLength;
 
@@ -54,7 +54,7 @@ namespace Lykke.Job.SlackNotifications.Services
                 return message;
             }
 
-            var fullMessageUrl = await _messagesRepository.SaveMessageAsync(message);
+            var fullMessageUrl = await _messagesRepository.SaveMessageAsync(_environment, sender, message);
             return $"{message.Substring(0, maxShortMessageLength)}... <{fullMessageUrl}|Read all>";
         }
 

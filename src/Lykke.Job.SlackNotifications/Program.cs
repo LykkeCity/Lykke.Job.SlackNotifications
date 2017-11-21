@@ -8,6 +8,8 @@ namespace Lykke.Job.SlackNotifications
 {
     public class Program
     {
+        public static string EnvInfo => Environment.GetEnvironmentVariable("ENV_INFO");
+        
         public static void Main(string[] args)
         {
             Console.WriteLine($"Lykke.Job.SlackNotifications version {PlatformServices.Default.Application.ApplicationVersion}");
@@ -16,7 +18,7 @@ namespace Lykke.Job.SlackNotifications
 #else
             Console.WriteLine("Is RELEASE");
 #endif           
-            Console.WriteLine($"ENV_INFO: {Environment.GetEnvironmentVariable("ENV_INFO")}");
+            Console.WriteLine($"ENV_INFO: {EnvInfo}");
 
             try
             {

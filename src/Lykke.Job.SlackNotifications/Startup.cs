@@ -37,8 +37,6 @@ namespace Lykke.Job.SlackNotifications
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -72,7 +70,7 @@ namespace Lykke.Job.SlackNotifications
                 .WithParameter(TypedParameter.From(settings.SlackIntegration))
                 .As<ISlackNotificationSender>();
             builder
-                .Register(c => MessagesRepository.Create(settingsManager.Nested(s => s.SlackNotificationsJobSettings.SharedStorageConnString)))
+                .Register(c => MessagesRepository.Create(settingsManager.Nested(s => s.SlackNotificationsJobSettings.FullMessagesConnString)))
                 .As<IMessagesRepository>();
 
             builder.AddTriggers(pool =>
@@ -119,7 +117,7 @@ namespace Lykke.Job.SlackNotifications
             {
                 _triggerHostTask = _triggerHost.Start();
 
-                await Log.WriteMonitorAsync("", "", "Started");
+                await Log.WriteMonitorAsync("", $"Env: {Program.EnvInfo}", "Started");
             }
             catch (Exception ex)
             {
@@ -142,7 +140,7 @@ namespace Lykke.Job.SlackNotifications
             {
                 if (Log != null)
                 {
-                    await Log?.WriteFatalErrorAsync(nameof(Startup), nameof(StopApplication), ex);
+                    await Log.WriteFatalErrorAsync(nameof(Startup), nameof(StopApplication), ex);
                 }
             }
         }
@@ -153,7 +151,7 @@ namespace Lykke.Job.SlackNotifications
             {
                 if (Log != null)
                 {
-                    await Log.WriteMonitorAsync("", "", "Terminating");
+                    await Log.WriteMonitorAsync("", $"Env: {Program.EnvInfo}", "Terminating");
                 }
 
                 ApplicationContainer.Dispose();
