@@ -7,6 +7,9 @@
 
         void MuteMessagePrefix(string prefix);
         void UnmuteMessagePrefix(string prefix);
+        void MuteRegexMessage(string regex);
+        void UnmuteRegexMessage(string regex);
+        FiltersList GetAllFilters();
 
         bool ShouldMessageBeFilteredOut(SlackNotificationRequestMsg message);
     }

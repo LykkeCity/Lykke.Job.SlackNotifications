@@ -33,6 +33,7 @@ namespace Lykke.Job.SlackNotifications.Services
             try
             {
                 bool skip = _notificationFilter.ShouldMessageBeFilteredOut(msg);
+
                 if (skip)
                     return;
 
