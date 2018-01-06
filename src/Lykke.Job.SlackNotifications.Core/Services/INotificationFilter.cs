@@ -1,4 +1,6 @@
-﻿namespace Lykke.Job.SlackNotifications.Core.Services
+﻿using System.Threading.Tasks;
+
+namespace Lykke.Job.SlackNotifications.Core.Services
 {
     public interface INotificationFilter
     {
@@ -11,6 +13,6 @@
         void UnmuteRegexMessage(string regex);
         FiltersList GetAllFilters();
 
-        bool ShouldMessageBeFilteredOut(SlackNotificationRequestMsg message);
+        Task<bool> ShouldMessageBeFilteredOut(SlackNotificationRequestMsg message);
     }
 }
