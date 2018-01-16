@@ -1,9 +1,11 @@
-﻿namespace Lykke.Job.SlackNotifications.Core
+﻿using System.Collections.Generic;
+
+namespace Lykke.Job.SlackNotifications.Core
 {
     public class FiltersList
     {
-        public string[] Senders { get; set; }
-        public string[] MessagePrefixes { get; set; }
-        public string[] MessageRegExps { get; set; }
+        public Dictionary<string, string> Senders { get; set; }
+        public Dictionary<string, string> MessagePrefixes { get; set; }
+        public Dictionary<string, string> MessageRegExps { get; set; }
     }
 }
