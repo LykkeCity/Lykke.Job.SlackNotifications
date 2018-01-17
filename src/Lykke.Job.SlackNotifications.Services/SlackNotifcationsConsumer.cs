@@ -44,7 +44,12 @@ namespace Lykke.Job.SlackNotifications.Services
                     && now.Subtract(_lastSendTime).TotalMinutes < 1)
                     return;
 
-                await _srvSlackNotifications.SendNotificationAsync(muteItem?.Type ?? msg.Type, msg.Message, msg.Sender);
+                string message = msg.Message;
+
+                if (muteItem?.Type != null && muteItem.Type != msg.Type)
+                    message = $"[redirected from {msg.Type}] {message}";
+
+                await _srvSlackNotifications.SendNotificationAsync(muteItem?.Type ?? msg.Type, message, msg.Sender);
 
                 _lastMsg = msg;
                 _lastSendTime = now;
