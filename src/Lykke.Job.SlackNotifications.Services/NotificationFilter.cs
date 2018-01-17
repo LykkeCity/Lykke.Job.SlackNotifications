@@ -80,10 +80,12 @@ namespace Lykke.Job.SlackNotifications.Services
 
         public async Task<MuteItem> GetMutedItem(SlackNotificationRequestMsg message)
         {
-            if (_mutedSenders.ContainsKey(message.Sender))
-                return _mutedSenders[message.Sender];
+            string key = _mutedSenders.Keys.FirstOrDefault(item => message.Sender.IndexOf(item, StringComparison.OrdinalIgnoreCase) >= 0);
+            
+            if (!string.IsNullOrEmpty(key))
+                return _mutedSenders[key];
 
-            string key = _mutedSenders.Keys.FirstOrDefault(item => message.Message.StartsWith(item));
+            key = _mutedSenders.Keys.FirstOrDefault(item => message.Message.StartsWith(item));
             
             if (!string.IsNullOrEmpty(key))
             {
