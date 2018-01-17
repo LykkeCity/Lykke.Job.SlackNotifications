@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
 using AzureStorage.Tables;
+using Common;
 using Lykke.Logs;
 using Lykke.SlackNotification.AzureQueue;
 using Lykke.Common.ApiLibrary.Middleware;
@@ -19,6 +21,7 @@ using Lykke.JobTriggers.Triggers;
 using Lykke.Job.SlackNotifications.Core;
 using Lykke.Job.SlackNotifications.Core.Domain;
 using Lykke.Job.SlackNotifications.Core.Services;
+using Lykke.Job.SlackNotifications.PeriodicalHandlers;
 using Lykke.Job.SlackNotifications.Repositories;
 using Lykke.Job.SlackNotifications.Services;
 
@@ -75,8 +78,13 @@ namespace Lykke.Job.SlackNotifications
 
             builder.AddTriggers(pool =>
             {
-                pool.AddDefaultConnection(settingsManager.CurrentValue.SlackNotificationsJobSettings.SharedStorageConnString);
+                pool.AddDefaultConnection(settingsManager.ConnectionString(x => x.SlackNotificationsJobSettings.SharedStorageConnString));
             });
+
+            builder.RegisterType<UnmuteHandler>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance();
 
             builder.Populate(services);
 

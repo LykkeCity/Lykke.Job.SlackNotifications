@@ -4,6 +4,7 @@ using Common;
 using Common.Log;
 using Lykke.JobTriggers.Triggers.Attributes;
 using Lykke.Job.SlackNotifications.Core;
+using Lykke.Job.SlackNotifications.Core.Domain;
 using Lykke.Job.SlackNotifications.Core.Services;
 
 namespace Lykke.Job.SlackNotifications.Services
@@ -32,8 +33,9 @@ namespace Lykke.Job.SlackNotifications.Services
         {
             try
             {
-                bool skip = _notificationFilter.ShouldMessageBeFilteredOut(msg);
-                if (skip)
+                MuteItem muteItem = await _notificationFilter.GetMutedItem(msg);
+
+                if (muteItem != null && string.IsNullOrEmpty(muteItem.Type))
                     return;
 
                 var now = DateTime.UtcNow;
@@ -42,7 +44,12 @@ namespace Lykke.Job.SlackNotifications.Services
                     && now.Subtract(_lastSendTime).TotalMinutes < 1)
                     return;
 
-                await _srvSlackNotifications.SendNotificationAsync(msg.Type, msg.Message, msg.Sender);
+                string message = msg.Message;
+
+                if (muteItem?.Type != null && muteItem.Type != msg.Type)
+                    message = $"[redirected from {msg.Type}] {message}";
+
+                await _srvSlackNotifications.SendNotificationAsync(muteItem?.Type ?? msg.Type, message, msg.Sender);
 
                 _lastMsg = msg;
                 _lastSendTime = now;

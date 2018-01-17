@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Job.SlackNotifications.Core
@@ -21,9 +22,17 @@ namespace Lykke.Job.SlackNotifications.Core
         public string FullMessagesConnString { get; set; }
 
         [Optional]
-        public List<string> MutedSenders { get; set; }
+        public Dictionary<string, MuteSettings> MutedSenders { get; set; }
 
-        public List<string> MutedMessagePrefixes { get; set; }
+        public Dictionary<string, MuteSettings> MutedMessagePrefixes { get; set; }
+        [Optional]
+        public Dictionary<string, MuteSettings> MutedRegexMessage { get; set; }
+    }
+
+    public class MuteSettings
+    {
+        public TimeSpan TimeToMute { get; set; }
+        public string Type { get; set; }
     }
 
     public class SlackNotificationsSettings
