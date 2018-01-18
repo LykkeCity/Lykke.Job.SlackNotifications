@@ -127,7 +127,7 @@ namespace Lykke.Job.SlackNotifications.Services
             {
                 int minutes = Math.Max((int)Math.Round((pair.Value.ExpireAt - now).TotalMinutes), 1);
                 string min = minutes > 1 ? "minutes" : "minute";
-                result[pair.Key] = $"Will be unnmuted in {minutes} {min} (expires at {pair.Value.ExpireAt:HH:mm:ss})";
+                result[pair.Key] = $"Muted messages: {pair.Value.MutedMessagesCount}. Will be unnmuted in {minutes} {min} (expires at {pair.Value.ExpireAt:T})";
             }
 
             return result;

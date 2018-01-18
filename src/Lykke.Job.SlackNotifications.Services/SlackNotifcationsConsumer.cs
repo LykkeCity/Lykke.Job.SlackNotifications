@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Common;
 using Common.Log;
+using JetBrains.Annotations;
 using Lykke.JobTriggers.Triggers.Attributes;
 using Lykke.Job.SlackNotifications.Core;
 using Lykke.Job.SlackNotifications.Core.Domain;
@@ -28,6 +29,7 @@ namespace Lykke.Job.SlackNotifications.Services
             _log = log;
         }
 
+        [UsedImplicitly]
         [QueueTrigger("slack-notifications")]
         public async Task ProcessInMessage(SlackNotificationRequestMsg msg)
         {
@@ -36,7 +38,15 @@ namespace Lykke.Job.SlackNotifications.Services
                 MuteItem muteItem = await _notificationFilter.GetMutedItem(msg);
 
                 if (muteItem != null && string.IsNullOrEmpty(muteItem.Type))
+                {
+                    muteItem.MutedMessagesCount++;
+                    
+                    if (muteItem.MutedMessagesCount > 1)
+                        return;
+
+                    await _srvSlackNotifications.SendNotificationAsync(msg.Type, $"*[This message is muted for {muteItem.TimeToMute.TotalMinutes} minute(s)! (using: '{muteItem.Value}')]*: {msg.Message}", $"*[:tired_face: muted :tired_face: ]* {msg.Sender}");
                     return;
+                }
 
                 var now = DateTime.UtcNow;
                 if (_lastMsg != null && _lastMsg.Type == msg.Type

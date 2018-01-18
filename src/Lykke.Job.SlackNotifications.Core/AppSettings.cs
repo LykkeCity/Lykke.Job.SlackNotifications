@@ -23,7 +23,7 @@ namespace Lykke.Job.SlackNotifications.Core
 
         [Optional]
         public Dictionary<string, MuteSettings> MutedSenders { get; set; }
-
+        [Optional]
         public Dictionary<string, MuteSettings> MutedMessagePrefixes { get; set; }
         [Optional]
         public Dictionary<string, MuteSettings> MutedRegexMessage { get; set; }
