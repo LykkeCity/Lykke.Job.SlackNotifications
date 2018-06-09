@@ -69,13 +69,6 @@ namespace Lykke.Job.SlackNotifications.Services
         }
 
         [UsedImplicitly]
-        [QueueTrigger("slack-notifications-poison", timeoutInSeconds: 100)]
-        public Task ProcessPoisonMessage(SlackNotificationRequestMsg msg)
-        {
-            return ProcessMessageFromQueue(msg, "slack-notifications-poison");
-        }
-
-        [UsedImplicitly]
         [QueueTrigger("slack-notifications-trace", timeoutInSeconds: 100)]
         public Task ProcessTraceMessage(SlackNotificationRequestMsg msg)
         {
@@ -118,7 +111,7 @@ namespace Lykke.Job.SlackNotifications.Services
             }
             catch (Exception ex)
             {
-                _log.WriteError($"ProcessMessageFromQueue: {queueName}", msg.ToJson(), ex);
+                _log.WriteError($"ProcessMessageFromQueue: {queueName}", msg, ex);
                 throw;
             }
         }
