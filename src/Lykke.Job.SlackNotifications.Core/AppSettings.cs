@@ -22,6 +22,9 @@ namespace Lykke.Job.SlackNotifications.Core
         public string FullMessagesConnString { get; set; }
 
         [Optional]
+        public string ForwardMonitorMessagesQueueConnString { get; set; }
+
+        [Optional]
         public Dictionary<string, MuteSettings> MutedSenders { get; set; }
         [Optional]
         public Dictionary<string, MuteSettings> MutedMessagePrefixes { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AzureStorage.Queue;
 using Common.Log;
 using AzureStorage.Tables;
 using Common;
@@ -67,6 +68,18 @@ namespace Lykke.Job.SlackNotifications
             var settings = settingsManager.CurrentValue;
             builder.RegisterInstance(settings.SlackNotificationsJobSettings).SingleInstance();
             builder.RegisterType<SlackNotifcationsConsumer>();
+
+            if (!string.IsNullOrEmpty(settings.SlackNotificationsJobSettings.ForwardMonitorMessagesQueueConnString))
+            {
+                builder.RegisterInstance<IMsgForwarder>(new MsgForwarder(AzureQueueExt.Create(
+                    settingsManager.ConnectionString(x => x.SlackNotificationsJobSettings.ForwardMonitorMessagesQueueConnString),
+                    "slack-notifications-monitor"))).SingleInstance();
+            }
+            else
+            {
+                builder.RegisterInstance<IMsgForwarder>(new MsgForwarderStub()).SingleInstance();
+            }
+
             builder.RegisterType<NotificationFilter>().As<INotificationFilter>().SingleInstance();
             builder
                 .RegisterType<SrvSlackNotifications>()

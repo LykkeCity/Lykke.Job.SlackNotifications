@@ -14,15 +14,18 @@ namespace Lykke.Job.SlackNotifications.Services
     {
         private readonly ISlackNotificationSender _srvSlackNotifications;
         private readonly INotificationFilter _notificationFilter;
+        private readonly IMsgForwarder _msgForwarder;
         private readonly ILog _log;
 
         public SlackNotifcationsConsumer(
             ISlackNotificationSender srvSlackNotifications,
             INotificationFilter notificationFilter,
+            IMsgForwarder msgForwarder,
             ILog log)
         {
             _srvSlackNotifications = srvSlackNotifications;
             _notificationFilter = notificationFilter;
+            _msgForwarder = msgForwarder;
             _log = log;
         }
 
@@ -65,6 +68,8 @@ namespace Lykke.Job.SlackNotifications.Services
         [QueueTrigger("slack-notifications-monitor", timeoutInSeconds: 100)]
         public Task ProcessMonitorMessage(SlackNotificationRequestMsg msg)
         {
+            _msgForwarder.ForwardMsg(msg.ToJson()); //temporary added until logs will not be using pub/sub. Forwarded message will be analyzed by another job
+
             return ProcessMessageFromQueue(msg, "slack-notifications-monitor");
         }
 
