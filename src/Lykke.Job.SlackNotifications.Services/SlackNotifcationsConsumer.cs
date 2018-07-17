@@ -68,7 +68,7 @@ namespace Lykke.Job.SlackNotifications.Services
         [QueueTrigger("slack-notifications-monitor", timeoutInSeconds: 100)]
         public Task ProcessMonitorMessage(SlackNotificationRequestMsg msg)
         {
-            _msgForwarder.ForwardMsg(msg.ToJson()); //temporary added until logs will not be using pub/sub. Forwarded message will be analyzed by another job
+            _msgForwarder.ForwardMsgAsync(msg.ToJson()); //temporary added until logs will not be using pub/sub. Forwarded message will be analyzed by another job
 
             return ProcessMessageFromQueue(msg, "slack-notifications-monitor");
         }
