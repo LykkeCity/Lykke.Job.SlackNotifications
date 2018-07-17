@@ -15,7 +15,7 @@ namespace Lykke.Job.SlackNotifications.Services
 
         public Task ForwardMsg(string msg)
         {
-            return _queueExt.PutMessageAsync(msg);
+            return _queueExt.PutRawMessageAsync(msg);
         }
     }
 }
