@@ -25,7 +25,7 @@ namespace Lykke.Job.SlackNotifications.Services
         {
             _log = log;
             _mutedSenders = settings.MutedSenders == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedSenders);
-            _mutedPrefixes = FillDictionary(settings.MutedMessagePrefixes);
+            _mutedPrefixes = settings.MutedMessagePrefixes == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedMessagePrefixes);
             _mutedMessagesRegex = settings.MutedRegexMessage == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedRegexMessage);
         }
 
