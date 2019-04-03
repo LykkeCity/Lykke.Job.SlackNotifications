@@ -1,0 +1,28 @@
+SlackNotificationsJobSettings:
+    LogsConnectionString:
+        settings-key: SlackNotificationsJobSettings-LogsConnectionString
+        types:
+        - AzureTableStorage
+    SharedStorageConnString:
+        settings-key: SlackNotificationsJobSettings-SharedStorageConnString
+        types:
+        - AzureTableStorage
+    FullMessagesConnString:
+        settings-key: SlackNotificationsJobSettings-FullMessagesConnString
+        types:
+        - AzureTableStorage
+SlackIntegration:
+    Env:
+        settings-key: SlackIntegration-Env
+    Channels:
+        settings-key: SlackIntegration-Channels
+        types:
+            - JsonArray
+SlackNotifications:
+    AzureQueue:
+        ConnectionString:
+            settings-key: SlackNotificationsConnString
+            types:
+                - AzureTableStorage
+        QueueName:
+            settings-key: SlackQueueName

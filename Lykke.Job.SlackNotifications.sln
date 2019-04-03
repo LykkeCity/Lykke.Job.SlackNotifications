@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 		README.md = README.md
+		settings.yaml = settings.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.SlackNotifications.Core", "src\Lykke.Job.SlackNotifications.Core\Lykke.Job.SlackNotifications.Core.csproj", "{B1078C18-6196-4939-966B-828D0306980E}"
@@ -19,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.SlackNotification
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.SlackNotifications.Services", "src\Lykke.Job.SlackNotifications.Services\Lykke.Job.SlackNotifications.Services.csproj", "{1D3E3834-2C92-46D5-9E02-96027D4480ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Job.SlackNotifications.Repositories", "src\Lykke.Job.SlackNotifications.Repositories\Lykke.Job.SlackNotifications.Repositories.csproj", "{81715429-F27A-42E8-8350-17CFB39DF9B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.SlackNotifications.Repositories", "src\Lykke.Job.SlackNotifications.Repositories\Lykke.Job.SlackNotifications.Repositories.csproj", "{81715429-F27A-42E8-8350-17CFB39DF9B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
