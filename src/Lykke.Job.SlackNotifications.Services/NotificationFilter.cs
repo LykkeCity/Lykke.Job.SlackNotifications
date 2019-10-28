@@ -14,9 +14,9 @@ namespace Lykke.Job.SlackNotifications.Services
     public class NotificationFilter : INotificationFilter
     {
         private readonly ILog _log;
-        private readonly Dictionary<string, MuteItem> _mutedSenders;
-        private readonly Dictionary<string, MuteItem> _mutedPrefixes;
-        private readonly Dictionary<string, MuteItem> _mutedMessagesRegex;
+        private readonly Dictionary<string, MuteItem> _mutedSenders = new Dictionary<string, MuteItem>();
+        private readonly Dictionary<string, MuteItem> _mutedPrefixes = new Dictionary<string, MuteItem>();
+        private readonly Dictionary<string, MuteItem> _mutedMessagesRegex = new Dictionary<string, MuteItem>();
 
         public NotificationFilter(
             SlackNotificationsJobSettings settings,
@@ -24,9 +24,12 @@ namespace Lykke.Job.SlackNotifications.Services
             )
         {
             _log = log;
-            _mutedSenders = settings.MutedSenders == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedSenders);
-            _mutedPrefixes = settings.MutedMessagePrefixes == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedMessagePrefixes);
-            _mutedMessagesRegex = settings.MutedRegexMessage == null ? new Dictionary<string, MuteItem>() : FillDictionary(settings.MutedRegexMessage);
+            if (settings.MutedSenders != null)
+                FillDictionary(settings.MutedSenders, _mutedSenders);
+            if (settings.MutedMessagePrefixes != null)
+                FillDictionary(settings.MutedMessagePrefixes, _mutedPrefixes);
+            if (settings.MutedRegexMessage != null)
+                FillDictionary(settings.MutedRegexMessage, _mutedMessagesRegex);
         }
 
         public void MuteSender(MuteItem item)
@@ -106,18 +109,14 @@ namespace Lykke.Job.SlackNotifications.Services
             return null;
         }
 
-        private Dictionary<string, MuteItem> FillDictionary(Dictionary<string, MuteSettings> dict)
+        private void FillDictionary(Dictionary<string, MuteSettings> muteItems, Dictionary<string, MuteItem> dict)
         {
-            var result = new Dictionary<string, MuteItem>();
-
-            foreach (KeyValuePair<string, MuteSettings> pair in dict)
+            foreach (var pair in muteItems)
             {
-                result[pair.Key] = MuteItem.Create(pair.Key, pair.Value.TimeToMute, pair.Value.Type);
+                dict.Add(pair.Key, MuteItem.Create(pair.Key, pair.Value.TimeToMute, pair.Value.Type));
             }
-
-            return result;
         }
-        
+
         private Dictionary<string, string> GetExpireInfo(Dictionary<string, MuteItem> dict)
         {
             var now = DateTime.UtcNow;

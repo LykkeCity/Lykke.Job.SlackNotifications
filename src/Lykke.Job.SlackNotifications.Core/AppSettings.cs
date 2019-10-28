@@ -35,6 +35,8 @@ namespace Lykke.Job.SlackNotifications.Core
     public class MuteSettings
     {
         public TimeSpan TimeToMute { get; set; }
+
+        [Optional]
         public string Type { get; set; }
     }
 
