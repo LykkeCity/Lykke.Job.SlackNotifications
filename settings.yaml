@@ -11,6 +11,21 @@ SlackNotificationsJobSettings:
         settings-key: SlackNotificationsJobSettings-FullMessagesConnString
         types:
         - AzureTableStorage
+    MutedSenders:
+        settings-key: SlackNotificationsJobSettings-MutedSenders
+        types:
+        - Optional
+        - Json
+    MutedMessagePrefixes:
+        settings-key: SlackNotificationsJobSettings-MutedMessagePrefixes
+        types:
+        - Optional
+        - Json
+    MutedRegexMessage:
+        settings-key: SlackNotificationsJobSettings-MutedRegexMessage
+        types:
+        - Optional
+        - Json
 SlackIntegration:
     Env:
         settings-key: SlackIntegration-Env
