@@ -9,6 +9,7 @@ using Common;
 using Lykke.Job.SlackNotifications.Core;
 using Lykke.Job.SlackNotifications.Core.Domain;
 using Lykke.Job.SlackNotifications.Core.Services;
+using Newtonsoft.Json;
 
 namespace Lykke.Job.SlackNotifications.Services
 {
@@ -124,16 +125,16 @@ namespace Lykke.Job.SlackNotifications.Services
             {
                 sender = sender.Substring(j);
             }
+            
+            var json = JsonConvert.SerializeObject(new
+            {
+                message = message,
+                alias = sender,
+                description = "Check in slack error",
+                priority = "P1"
+            });
 
-            sender = sender.Replace("\\", "\\\\");
-            sender = sender.Replace("\"", "\\\"");
 
-            message = message.Replace("\\", "\\\\");
-            message = message.Replace("\"", "\\\"");
-
-            Console.WriteLine($"sender: {sender}");
-
-            var json = $"{{ \"message\": \"{message}\", \"alias\": \"{sender}\", \"description\":\"Check in slack error\", \"priority\":\"P1\"}}";
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _opsgenieClient.PostAsync("", content);
 
