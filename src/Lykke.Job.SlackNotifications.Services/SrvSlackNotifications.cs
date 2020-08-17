@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -127,7 +128,14 @@ namespace Lykke.Job.SlackNotifications.Services
             var json = $"{{ \"message\": \"{message}\", \"alias\": \"{sender}\", \"description\":\"Check in slack error\", \"priority\":\"P1\"}}";
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _opsgenieClient.PostAsync("", content);
-            return await response.Content.ReadAsStringAsync();
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(response.StatusCode != HttpStatusCode.Accepted
+                ? $"Cannot send message to opsgenie. StatusCode: {response.StatusCode}; Body: {body}"
+                : $"Sent to opsgenie, Alias: {sender}");
+
+            return body;
         }
     }
 }
