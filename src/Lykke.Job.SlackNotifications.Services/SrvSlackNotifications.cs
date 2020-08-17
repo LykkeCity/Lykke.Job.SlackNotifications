@@ -126,7 +126,7 @@ namespace Lykke.Job.SlackNotifications.Services
                 sender = sender.Substring(j);
             }
 
-            message = message.Replace("|Read all", "");
+            message = message.Replace("|Read all", " ");
 
             var json = JsonConvert.SerializeObject(new
             {
