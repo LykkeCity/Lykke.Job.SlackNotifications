@@ -125,6 +125,10 @@ namespace Lykke.Job.SlackNotifications.Services
                 sender = sender.Substring(j);
             }
 
+            sender = sender.Replace("\"", "\\\"");
+
+            Console.WriteLine($"sender: {sender}");
+
             var json = $"{{ \"message\": \"{message}\", \"alias\": \"{sender}\", \"description\":\"Check in slack error\", \"priority\":\"P1\"}}";
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _opsgenieClient.PostAsync("", content);
