@@ -21,6 +21,10 @@ namespace Lykke.Job.SlackNotifications.Core
 
         public string FullMessagesConnString { get; set; }
 
+        public string OpsgenieHost { get; set; }
+
+        public string OpsgenieApiKey { get; set; }
+
         [Optional]
         public string ForwardMonitorMessagesQueueConnString { get; set; }
 
@@ -60,6 +64,9 @@ namespace Lykke.Job.SlackNotifications.Core
             public string WebHookUrl { get; set; }
             [Optional]
             public int MaxShortMessageLength { get; set; }
+
+            [Optional]
+            public bool Opsgenie { get; set; }
         }
 
         public string Env { get; set; }

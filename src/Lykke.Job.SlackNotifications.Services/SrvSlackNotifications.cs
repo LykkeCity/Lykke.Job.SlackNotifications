@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Text;
 using Common;
@@ -17,13 +20,23 @@ namespace Lykke.Job.SlackNotifications.Services
         private readonly SlackSettings _settings;
         private readonly IMessagesRepository _messagesRepository;
         private readonly string _environment;
+        private HttpClient _opsgenieClient;
 
-        public SrvSlackNotifications(SlackSettings settings, IMessagesRepository messagesRepository)
+        public SrvSlackNotifications(SlackSettings settings, IMessagesRepository messagesRepository, AppSettings globalSettings)
         {
             _settings = settings;
             _messagesRepository = messagesRepository;
             if (!string.IsNullOrEmpty(_settings.Env))
                 _environment = $"Environment: {_settings.Env}";
+
+            var opsgenieHost = globalSettings.SlackNotificationsJobSettings.OpsgenieHost;
+            var opsgenieKey = globalSettings.SlackNotificationsJobSettings.OpsgenieApiKey;
+
+            _opsgenieClient = new HttpClient();
+            _opsgenieClient.DefaultRequestHeaders.Accept.Clear();
+            _opsgenieClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _opsgenieClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("GenieKey", opsgenieKey);
+            _opsgenieClient.BaseAddress = new Uri(opsgenieHost);
         }
 
         public async Task SendNotificationAsync(string type, string message, string sender = null)
@@ -43,6 +56,11 @@ namespace Lykke.Job.SlackNotifications.Services
             strBuilder.AppendLine(sender != null ? $"{sender} : {processedMessage}" : processedMessage);
 
             await HttpRequestClient.PostRequest(new { text = strBuilder.ToString() }.ToJson(), channel.WebHookUrl);
+
+            if (channel.Opsgenie)
+            {
+                await PostRequest(sender, message);
+            }
         }
 
         private async Task<string> ProcessMessageAsync(string sender, string message, SlackSettings.Channel channel)
@@ -88,6 +106,32 @@ namespace Lykke.Job.SlackNotifications.Services
             }
 
             return null;
+        }
+
+        public async Task<string> PostRequest(string sender, string message)
+        {
+            var i = message.IndexOf("]");
+            var j = 0;
+
+            while (i > 0)
+            {
+                j = i + 1;
+                i = message.IndexOf("]", j);
+            }
+
+            if (j > 0)
+            {
+                message = message.Substring(j);
+            }
+
+            if (sender.Contains("]"))
+                Console.WriteLine(sender);
+
+
+            var json = $"{{ \"message\": \"{message}\", \"alias\": \"{sender}\", \"description\":\"Check in slack error\", \"priority\":\"P1\"}}";
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _opsgenieClient.PostAsync("", content);
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }
