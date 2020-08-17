@@ -125,7 +125,11 @@ namespace Lykke.Job.SlackNotifications.Services
                 sender = sender.Substring(j);
             }
 
+            sender = sender.Replace("\\", "\\\\");
             sender = sender.Replace("\"", "\\\"");
+
+            message = message.Replace("\\", "\\\\");
+            message = message.Replace("\"", "\\\"");
 
             Console.WriteLine($"sender: {sender}");
 
