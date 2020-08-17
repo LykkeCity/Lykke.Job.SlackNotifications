@@ -130,7 +130,7 @@ namespace Lykke.Job.SlackNotifications.Services
             {
                 message = message,
                 alias = sender,
-                description = "Check in slack error",
+                description = message,
                 priority = "P1"
             });
 
