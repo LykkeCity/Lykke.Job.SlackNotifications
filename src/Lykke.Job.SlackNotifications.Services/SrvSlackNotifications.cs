@@ -61,7 +61,7 @@ namespace Lykke.Job.SlackNotifications.Services
 
             if (channel.Opsgenie)
             {
-                await PostRequest(sender, message);
+                await PostRequest(sender, processedMessage);
             }
         }
 
