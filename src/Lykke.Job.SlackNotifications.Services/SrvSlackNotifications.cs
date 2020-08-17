@@ -110,23 +110,19 @@ namespace Lykke.Job.SlackNotifications.Services
 
         public async Task<string> PostRequest(string sender, string message)
         {
-            var i = message.IndexOf("]");
+            var i = sender.IndexOf("]");
             var j = 0;
 
             while (i > 0)
             {
                 j = i + 1;
-                i = message.IndexOf("]", j);
+                i = sender.IndexOf("]", j);
             }
 
             if (j > 0)
             {
-                message = message.Substring(j);
+                sender = sender.Substring(j);
             }
-
-            if (sender.Contains("]"))
-                Console.WriteLine(sender);
-
 
             var json = $"{{ \"message\": \"{message}\", \"alias\": \"{sender}\", \"description\":\"Check in slack error\", \"priority\":\"P1\"}}";
             var content = new StringContent(json, Encoding.UTF8, "application/json");
