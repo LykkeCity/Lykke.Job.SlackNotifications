@@ -84,6 +84,7 @@ namespace Lykke.Job.SlackNotifications
             builder
                 .RegisterType<SrvSlackNotifications>()
                 .WithParameter(TypedParameter.From(settings.SlackIntegration))
+                .WithParameter(TypedParameter.From(settings))
                 .As<ISlackNotificationSender>();
             builder
                 .Register(c => MessagesRepository.Create(settingsManager.Nested(s => s.SlackNotificationsJobSettings.FullMessagesConnString)))
